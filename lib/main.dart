@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:device_apps/device_apps.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:intl/intl.dart';
 
 void main() {
@@ -162,7 +161,7 @@ class _ClockState extends State<Clock> {
   }
 }
 
-class Notifications extends StatefulWidget {
+/*class Notifications extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _NotificationsState();
 }
@@ -207,4 +206,4 @@ class _NotificationsState extends State<Notifications> {
       },
     );
   }
-}
+}*/
