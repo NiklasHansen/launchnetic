@@ -1,3 +1,5 @@
+import 'package:device_apps/device_apps.dart';
+import 'package:flutter/widgets.dart';
 import 'package:launchnetic/dao/favorite_dao.dart';
 import 'package:launchnetic/database_provider.dart';
 import 'package:launchnetic/model/favorite.dart';
@@ -32,5 +34,30 @@ class FavoritesRepository implements Repository<Favorite> {
     await db.update(dao.tableName, dao.toMap(value),
         where: dao.columnId + " = ?", whereArgs: [value.id]);
     return value;
+  }
+
+  Future<List<Favorite>> getFavorites() async {
+    final db = await databaseProvider.db();
+    var results = await db.query(dao.tableName, orderBy: dao.columnOrder);
+    var favorites = List<Favorite>();
+
+    for (var i = 0; i < results.length; i++) {
+      var fav = dao.fromMap(results[i]);
+
+      if (!await DeviceApps.isAppInstalled(fav.packageName)) {
+        delete(fav);
+        continue;
+      }
+
+      var app = await DeviceApps.getApp(fav.packageName);
+      fav.appName = app.appName;
+      if (app is ApplicationWithIcon) {
+        fav.icon = Image.memory(app.icon);
+      }
+
+      favorites.add(fav);
+    }
+
+    return favorites;
   }
 }
